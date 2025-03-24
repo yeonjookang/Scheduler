@@ -12,7 +12,7 @@
   - https://whip-newt-27d.notion.site/API-1c08763d303280c0bcbcf00ba8717310?pvs=4
 - [x] ERD 설계하기
   ![img.png](erd.png)
-- [ ] schedule.sql 파일에 쿼리 작성하기
+- [x] schedule.sql 파일에 쿼리 작성하기
 ### LV 1. 일정 생성 및 조회
 - [ ] 일정 생성하기
   - 제목, 내용, 작성자, 비밀번호, 비밀번호 확인, 작성/수정일 입력받기
