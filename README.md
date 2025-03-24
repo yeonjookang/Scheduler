@@ -8,7 +8,8 @@
 
 ## 필수 기능 요구사항
 ### LV 0. API 명세서 및 ERD 설계
-- [ ] API 명세서 작성하기
+- [x] API 명세서 작성하기
+  - https://whip-newt-27d.notion.site/API-1c08763d303280c0bcbcf00ba8717310?pvs=4
 - [ ] ERD 설계하기
 - [ ] schedule.sql 파일에 쿼리 작성하기
 ### LV 1. 일정 생성 및 조회
