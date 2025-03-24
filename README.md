@@ -10,7 +10,8 @@
 ### LV 0. API 명세서 및 ERD 설계
 - [x] API 명세서 작성하기
   - https://whip-newt-27d.notion.site/API-1c08763d303280c0bcbcf00ba8717310?pvs=4
-- [ ] ERD 설계하기
+- [x] ERD 설계하기
+  ![img.png](erd.png)
 - [ ] schedule.sql 파일에 쿼리 작성하기
 ### LV 1. 일정 생성 및 조회
 - [ ] 일정 생성하기
