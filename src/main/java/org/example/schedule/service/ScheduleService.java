@@ -2,6 +2,7 @@ package org.example.schedule.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.schedule.controller.request.dto.CreateScheduleDto;
+import org.example.schedule.controller.request.dto.DeleteScheduleDto;
 import org.example.schedule.controller.request.dto.UpdateScheduleDto;
 import org.example.schedule.controller.response.dto.GetScheduleDetailDto;
 import org.example.schedule.controller.response.dto.GetSchedulesDto;
@@ -62,11 +63,20 @@ public class ScheduleService {
     }
 
     public void updateSchedule(Long scheduleId, UpdateScheduleDto request, LocalDateTime now) {
-        Long userId = scheduleRepository.findUserIdByEmailAndPassword(request.email(), request.password())
+        validateScheduleOwnerOrThrow(scheduleId, request.email(), request.password());
+        scheduleRepository.updateSchedule(scheduleId, request, now);
+    }
+    
+    private void validateScheduleOwnerOrThrow(Long scheduleId,String email, String password) {
+        Long userId = scheduleRepository.findUserIdByEmailAndPassword(email, password)
                 .orElseThrow(() -> new UserException(USER_NOT_FOUND));
         if (!scheduleRepository.isScheduleOwnedBy(scheduleId, userId)) {
             throw new ScheduleException(USER_NOT_ALLOWED);
         }
-        scheduleRepository.updateSchedule(scheduleId, request, now);
+    }
+
+    public void deleteSchedule(Long scheduleId, DeleteScheduleDto request) {
+        validateScheduleOwnerOrThrow(scheduleId, request.email(), request.password());
+        scheduleRepository.deleteById(scheduleId);
     }
 }

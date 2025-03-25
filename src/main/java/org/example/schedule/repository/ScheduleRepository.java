@@ -163,4 +163,10 @@ public class ScheduleRepository {
 
         jdbcTemplate.update(sql.toString(), params);
     }
+
+    public void deleteById(Long scheduleId) {
+        String sql = "DELETE FROM schedule WHERE id = :scheduleId";
+        Map<String, Object> params = Map.of("scheduleId", scheduleId);
+        jdbcTemplate.update(sql, params);
+    }
 }

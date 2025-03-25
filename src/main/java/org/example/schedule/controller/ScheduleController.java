@@ -1,6 +1,7 @@
 package org.example.schedule.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.schedule.controller.request.dto.DeleteScheduleDto;
 import org.example.schedule.controller.request.dto.UpdateScheduleDto;
 import org.example.schedule.controller.response.BaseResponse;
 import org.example.schedule.controller.request.dto.CreateScheduleDto;
@@ -46,6 +47,12 @@ public class ScheduleController {
     @PatchMapping("/{scheduleId}")
     public BaseResponse<Void> updateSchedule(@PathVariable Long scheduleId, @RequestBody @Validated UpdateScheduleDto request) {
         scheduleService.updateSchedule(scheduleId, request, LocalDateTime.now());
+        return BaseResponse.success();
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    public BaseResponse<Void> deleteSchedule(@PathVariable Long scheduleId, @RequestBody @Validated DeleteScheduleDto request) {
+        scheduleService.deleteSchedule(scheduleId, request);
         return BaseResponse.success();
     }
 }
