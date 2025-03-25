@@ -40,12 +40,11 @@ public class UserRepository {
         return results.stream().findFirst();
     }
 
-    public Long saveUser(String name, String email, String password, LocalDateTime now) {
-        String sql = "INSERT INTO user (name, email, password, create_at, modify_at) " +
-                "VALUES (:name, :email, :password, :createAt, :modifyAt)";
+    public Long saveUser(String email, String password, LocalDateTime now) {
+        String sql = "INSERT INTO user (email, password, create_at, modify_at) " +
+                "VALUES (:email, :password, :createAt, :modifyAt)";
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("name", name)
                 .addValue("email", email)
                 .addValue("password", password)
                 .addValue("createAt", now)

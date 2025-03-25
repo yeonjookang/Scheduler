@@ -1,5 +1,7 @@
 package org.example.schedule.repository;
 
+import jakarta.validation.constraints.NotBlank;
+import org.example.schedule.controller.request.dto.UpdateScheduleDto;
 import org.example.schedule.controller.response.dto.GetScheduleDetailDto;
 import org.example.schedule.controller.response.dto.GetSchedulesDto;
 import org.example.schedule.controller.response.dto.ScheduleDto;
@@ -10,10 +12,7 @@ import javax.sql.DataSource;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ScheduleRepository {
@@ -24,12 +23,13 @@ public class ScheduleRepository {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public void saveSchedule(Long userId, String title, String content, LocalDateTime now) {
-        String sql = "INSERT INTO schedule (user_id, title, content, create_at, modify_at) " +
-                "VALUES (:userId, :title, :content, :createAt, :modifyAt)";
+    public void saveSchedule(Long userId, String name, String title, String content, LocalDateTime now) {
+        String sql = "INSERT INTO schedule (user_id, name,title, content, create_at, modify_at) " +
+                "VALUES (:userId, :name,:title, :content, :createAt, :modifyAt)";
 
         Map<String, Object> params = Map.of(
                 "userId", userId,
+                "name", name,
                 "title", title,
                 "content", content,
                 "createAt", now,
@@ -44,12 +44,12 @@ public class ScheduleRepository {
         //하나의 StringBuilder 객체에 계속 append 하기 때문에 성능이 훨씬 좋음
         StringBuilder baseSql = new StringBuilder();
         //동적 쿼리를 만들기 쉽게하기 위해 where 1=1 추가
-        baseSql.append("FROM schedule s JOIN user u ON s.user_id = u.id WHERE 1=1 ");
+        baseSql.append("FROM schedule s WHERE 1=1 ");
 
         Map<String, Object> params = new HashMap<>();
 
         if (name != null && !name.isBlank()) {
-            baseSql.append("AND u.name LIKE :name ");
+            baseSql.append("AND s.name LIKE :name ");
             params.put("name", "%" + name + "%");
         }
 
@@ -68,7 +68,7 @@ public class ScheduleRepository {
         int total = jdbcTemplate.queryForObject(countSql, params, Integer.class);
 
         // 데이터 조회
-        String querySql = "SELECT s.id AS scheduleId, u.name, u.email, s.title " + baseSql +
+        String querySql = "SELECT s.id AS scheduleId, s.name, s.title " + baseSql +
                 "ORDER BY s.create_at DESC " +
                 "LIMIT :limit OFFSET :offset";
 
@@ -81,7 +81,6 @@ public class ScheduleRepository {
                 (rs, rowNum) -> new ScheduleDto(
                         rs.getLong("scheduleId"),
                         rs.getString("name"),
-                        rs.getString("email"),
                         rs.getString("title")
                 )
         );
@@ -97,7 +96,7 @@ public class ScheduleRepository {
 
     public Optional<GetScheduleDetailDto> findScheduleDetailById(Long scheduleId) {
         String sql = """
-            SELECT u.name, u.email, s.title, s.content, s.create_at, s.modify_at
+            SELECT s.name, u.email, s.title, s.content, s.create_at, s.modify_at
             FROM schedule s
             JOIN user u ON s.user_id = u.id
             WHERE s.id = :scheduleId
@@ -119,5 +118,49 @@ public class ScheduleRepository {
         );
 
         return results.stream().findFirst();
+    }
+
+    public Optional<Long> findUserIdByEmailAndPassword(String email, String password) {
+        String sql = "SELECT id FROM user WHERE email = :email AND password = :password";
+        Map<String, Object> params = Map.of("email", email, "password", password);
+
+        List<Long> results = jdbcTemplate.query(sql, params, (rs, rowNum) -> rs.getLong("id"));
+        return results.stream().findFirst();
+    }
+
+    public boolean isScheduleOwnedBy(Long scheduleId, Long userId) {
+        String sql = "SELECT COUNT(*) FROM schedule WHERE id = :scheduleId AND user_id = :userId";
+        Map<String, Object> params = Map.of("scheduleId", scheduleId, "userId", userId);
+        Integer count = jdbcTemplate.queryForObject(sql, params, Integer.class);
+        return count != null && count > 0;
+    }
+
+    public void updateSchedule(Long scheduleId, UpdateScheduleDto request, LocalDateTime now) {
+        StringBuilder sql = new StringBuilder("UPDATE schedule SET ");
+        Map<String, Object> params = new HashMap<>();
+        List<String> updates = new ArrayList<>();
+
+        if (request.name() != null) {
+            updates.add("name = :name");
+            params.put("name", request.name());
+        }
+        if (request.title() != null) {
+            updates.add("title = :title");
+            params.put("title", request.title());
+        }
+        if (request.content() != null) {
+            updates.add("content = :content");
+            params.put("content", request.content());
+        }
+
+        if (updates.isEmpty()) return; // 수정할 내용이 없으면 종료
+
+        sql.append(String.join(", ", updates));
+        sql.append(", modify_at = :modifyAt WHERE id = :scheduleId");
+
+        params.put("modifyAt", now);
+        params.put("scheduleId", scheduleId);
+
+        jdbcTemplate.update(sql.toString(), params);
     }
 }
