@@ -1,5 +1,6 @@
 package org.example.schedule.repository;
 
+import org.example.schedule.controller.response.dto.GetScheduleDetailDto;
 import org.example.schedule.controller.response.dto.GetSchedulesDto;
 import org.example.schedule.controller.response.dto.ScheduleDto;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ScheduleRepository {
@@ -91,5 +93,31 @@ public class ScheduleRepository {
                 .totalPages(totalPages)
                 .totalElements(total)
                 .build();
+    }
+
+    public Optional<GetScheduleDetailDto> findScheduleDetailById(Long scheduleId) {
+        String sql = """
+            SELECT u.name, u.email, s.title, s.content, s.create_at, s.modify_at
+            FROM schedule s
+            JOIN user u ON s.user_id = u.id
+            WHERE s.id = :scheduleId
+        """;
+
+        Map<String, Object> params = Map.of("scheduleId", scheduleId);
+
+        List<GetScheduleDetailDto> results = jdbcTemplate.query(
+                sql,
+                params,
+                (rs, rowNum) -> new GetScheduleDetailDto(
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("title"),
+                        rs.getString("content"),
+                        rs.getTimestamp("create_at").toLocalDateTime(),
+                        rs.getTimestamp("modify_at").toLocalDateTime()
+                )
+        );
+
+        return results.stream().findFirst();
     }
 }

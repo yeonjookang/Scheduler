@@ -2,6 +2,7 @@ package org.example.schedule.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.schedule.controller.request.dto.CreateScheduleDto;
+import org.example.schedule.controller.response.dto.GetScheduleDetailDto;
 import org.example.schedule.controller.response.dto.GetSchedulesDto;
 import org.example.schedule.entity.User;
 import org.example.schedule.exception.ScheduleException;
@@ -52,5 +53,10 @@ public class ScheduleService {
 
     public GetSchedulesDto findSchedules(String name, String title, String date, Pageable pageable) {
         return scheduleRepository.findSchedules(name, title, date, pageable);
+    }
+
+    public GetScheduleDetailDto getScheduleDetail(Long scheduleId) {
+        return scheduleRepository.findScheduleDetailById(scheduleId)
+                .orElseThrow(() -> new ScheduleException(SCHEDULE_NOT_FOUND));
     }
 }

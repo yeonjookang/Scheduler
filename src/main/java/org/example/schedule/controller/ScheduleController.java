@@ -3,6 +3,7 @@ package org.example.schedule.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.schedule.controller.response.BaseResponse;
 import org.example.schedule.controller.request.dto.CreateScheduleDto;
+import org.example.schedule.controller.response.dto.GetScheduleDetailDto;
 import org.example.schedule.controller.response.dto.GetSchedulesDto;
 import org.example.schedule.service.ScheduleService;
 import org.springframework.data.web.PageableDefault;
@@ -33,5 +34,11 @@ public class ScheduleController {
     ) {
         GetSchedulesDto schedules = scheduleService.findSchedules(name, title, date, pageable);
         return BaseResponse.successOf(schedules);
+    }
+
+    @GetMapping("/{scheduleId}")
+    public BaseResponse<GetScheduleDetailDto> getScheduleDetail(@PathVariable Long scheduleId) {
+        GetScheduleDetailDto schedule = scheduleService.getScheduleDetail(scheduleId);
+        return BaseResponse.successOf(schedule);
     }
 }
