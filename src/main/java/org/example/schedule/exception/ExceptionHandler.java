@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.schedule.controller.response.BaseResponse;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,6 +27,13 @@ public class ExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @org.springframework.web.bind.annotation.ExceptionHandler(ScheduleException.class)
+    public BaseResponse<ResponseStatus> handle_ScheduleException(ScheduleException exception) {
+        log.error("[UserExceptionControllerAdvice: handle_ScheduleException 호출]", exception);
+        return BaseResponse.failOf(exception.getExceptionData(), exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @org.springframework.web.bind.annotation.ExceptionHandler({BaseException.class, NoHandlerFoundException.class, TypeMismatchException.class})
     public BaseResponse<ResponseStatus> handle_BadRequest(Exception exception) {
         log.error("[BaseExceptionControllerAdvice: handle_BadRequest 호출]", exception);
@@ -40,6 +48,14 @@ public class ExceptionHandler {
     }
 
     //json 포맷 오류
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @org.springframework.web.bind.annotation.ExceptionHandler(HttpMessageNotReadableException.class)
+    public BaseResponse<ResponseStatus> handle_HttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        log.error("[BaseExceptionControllerAdvice: handle_ConstraintViolationException 호출]", e);
+        return BaseResponse.failOf(REQUEST_DATA_INAPPROPRIATE);
+    }
+
+    //@Valid 유효성 검증 실패
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
     public BaseResponse<ResponseStatus> handle_MethodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -59,7 +75,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(ConstraintViolationException.class)
     public BaseResponse<ResponseStatus> handle_ConstraintViolationException(ConstraintViolationException e) {
         log.error("[BaseExceptionControllerAdvice: handle_ConstraintViolationException 호출]", e);
-        return BaseResponse.failOf(REQUEST_DATA_INAPPROPRIATE, e.getMessage());
+        return BaseResponse.failOf(REQUEST_DATA_INAPPROPRIATE);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
