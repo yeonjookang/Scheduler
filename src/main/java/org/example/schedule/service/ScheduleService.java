@@ -2,6 +2,7 @@ package org.example.schedule.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.schedule.controller.request.dto.CreateScheduleDto;
+import org.example.schedule.controller.response.dto.GetSchedulesDto;
 import org.example.schedule.entity.User;
 import org.example.schedule.exception.ScheduleException;
 import org.example.schedule.exception.UserException;
@@ -10,6 +11,7 @@ import org.example.schedule.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -46,5 +48,9 @@ public class ScheduleService {
         if(!password.equals(passwordConfirm)) {
             throw new ScheduleException(PASSWORD_CONFIRM_FAIL);
         }
+    }
+
+    public GetSchedulesDto findSchedules(String name, String title, String date, Pageable pageable) {
+        return scheduleRepository.findSchedules(name, title, date, pageable);
     }
 }
