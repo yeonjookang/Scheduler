@@ -6,6 +6,5 @@ import lombok.Builder;
 public record ScheduleDto(
         Long scheduleId,
         String name,
-        String email,
         String title
 ) {}

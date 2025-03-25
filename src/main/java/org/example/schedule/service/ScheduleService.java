@@ -2,6 +2,7 @@ package org.example.schedule.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.schedule.controller.request.dto.CreateScheduleDto;
+import org.example.schedule.controller.request.dto.UpdateScheduleDto;
 import org.example.schedule.controller.response.dto.GetScheduleDetailDto;
 import org.example.schedule.controller.response.dto.GetSchedulesDto;
 import org.example.schedule.entity.User;
@@ -34,9 +35,9 @@ public class ScheduleService {
             checkValidUser(request.password(),user.get().getPassword());
             userId = user.get().getId();
         }
-        else { userId = userRepository.saveUser(request.name(), request.email(), request.password(), now); }
+        else { userId = userRepository.saveUser(request.email(), request.password(), now); }
 
-        scheduleRepository.saveSchedule(userId, request.title(), request.content(), now);
+        scheduleRepository.saveSchedule(userId, request.name(), request.title(), request.content(), now);
     }
 
     private void checkValidUser(String requestPassword, String realPassword) {
@@ -58,5 +59,14 @@ public class ScheduleService {
     public GetScheduleDetailDto getScheduleDetail(Long scheduleId) {
         return scheduleRepository.findScheduleDetailById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(SCHEDULE_NOT_FOUND));
+    }
+
+    public void updateSchedule(Long scheduleId, UpdateScheduleDto request, LocalDateTime now) {
+        Long userId = scheduleRepository.findUserIdByEmailAndPassword(request.email(), request.password())
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        if (!scheduleRepository.isScheduleOwnedBy(scheduleId, userId)) {
+            throw new ScheduleException(USER_NOT_ALLOWED);
+        }
+        scheduleRepository.updateSchedule(scheduleId, request, now);
     }
 }

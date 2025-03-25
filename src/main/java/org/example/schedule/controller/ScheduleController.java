@@ -1,6 +1,7 @@
 package org.example.schedule.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.schedule.controller.request.dto.UpdateScheduleDto;
 import org.example.schedule.controller.response.BaseResponse;
 import org.example.schedule.controller.request.dto.CreateScheduleDto;
 import org.example.schedule.controller.response.dto.GetScheduleDetailDto;
@@ -22,7 +23,7 @@ public class ScheduleController {
     @PostMapping
     public BaseResponse<Void> saveSchedule(@RequestBody @Validated CreateScheduleDto request){
         scheduleService.saveSchedule(request, LocalDateTime.now());
-        return BaseResponse.successOf();
+        return BaseResponse.success();
     }
 
     @GetMapping
@@ -40,5 +41,11 @@ public class ScheduleController {
     public BaseResponse<GetScheduleDetailDto> getScheduleDetail(@PathVariable Long scheduleId) {
         GetScheduleDetailDto schedule = scheduleService.getScheduleDetail(scheduleId);
         return BaseResponse.successOf(schedule);
+    }
+
+    @PatchMapping("/{scheduleId}")
+    public BaseResponse<Void> updateSchedule(@PathVariable Long scheduleId, @RequestBody @Validated UpdateScheduleDto request) {
+        scheduleService.updateSchedule(scheduleId, request, LocalDateTime.now());
+        return BaseResponse.success();
     }
 }

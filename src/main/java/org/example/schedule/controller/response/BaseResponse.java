@@ -40,7 +40,7 @@ public class BaseResponse<T> {
         return new BaseResponse<>(SUCCESS, data);
     }
 
-    public static <T>  BaseResponse<T> successOf() {
+    public static <T>  BaseResponse<T> success() {
         return new BaseResponse<>(SUCCESS, null);
     }
 
