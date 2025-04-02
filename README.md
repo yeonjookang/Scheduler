@@ -48,24 +48,24 @@
 
 ## 피드백을 바탕으로 한 수정사항
 - [ ] BaseException 를 사용하신 점은 좋았습니다만, ScheduleException 와 UserException 가 상속받아 ExceptionHandler 에서 같이 사용하면 어땟을까란 생각이 드네요.
-- [ ] GetSchedulesDto 외에는 builder 를 사용하지 않는데 build 어노테이션을 필요 없을 것 같습니다.
+- [x] GetSchedulesDto 외에는 builder 를 사용하지 않는데 build 어노테이션을 필요 없을 것 같습니다.
 - [ ] 개발을 진행하다보면 Dto 가 너무 많아지는 경우가 존재합니다.
 
 ## 필수 기능 요구사항
-- [ ] 기존 코드를 모두 JPA를 활용하도록 수정합니다.
-  - [ ] JPA Auditing을 활용한 작성일, 수정일 필드
-  - [ ] Entity와 Spring-Data-Jpa Repository를 도입
+- [x] 기존 코드를 모두 JPA를 활용하도록 수정합니다.
+  - [x] JPA Auditing을 활용한 작성일, 수정일 필드
+  - [x] Entity와 Spring-Data-Jpa Repository를 도입
 - [ ] 이메일과 비밀번호를 활용해 로그인 / 회원가입 기능을 추가합니다.
-  - [ ] 회원가입 API 
-    - [ ] 비밀번호 암호화(PasswordEncoder 구현)
+  - [x] 회원가입 API 
+    - [x] 비밀번호 암호화(PasswordEncoder 구현)
   - [ ] 로그인 API 구현
     - [ ] 필터를 활용한 인증 처리
-    - [ ] Cookie/Session을 활용
+    - [x] Cookie/Session을 활용한 로그인 구현
 
 ## 도전 기능 요구사항
-- [ ] 다양한 예외처리를 적용합니다.
-  - [ ] 이메일 포맷 검증(정규 표현식)
-  - [ ] 할 일 제목은 10글자 이내, 유저명은 4글자 이내
+- [x] 다양한 예외처리를 적용합니다.
+  - [x] 이메일 포맷 검증(정규 표현식)
+  - [x] 할 일 제목은 10글자 이내, 유저명은 4글자 이내
 - [ ] 댓글 CRUD를 구현합니다.
-- [ ] 일정 페이징 조회
-  - [ ] Spring Data JPA에서 제공하는 Pageable과 PageRequest를 활용하여 페이징 구현
+- [x] 일정 페이징 조회
+  - [x] Spring Data JPA에서 제공하는 Pageable과 PageRequest를 활용하여 페이징 구현

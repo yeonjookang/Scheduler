@@ -1,7 +1,10 @@
 package org.example.schedule.controller;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.schedule.dto.request.user.LoginRequest;
 import org.example.schedule.dto.request.user.SignUpRequest;
 import org.example.schedule.dto.response.BaseResponse;
 import org.example.schedule.service.UserService;
@@ -22,8 +25,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public BaseResponse<Void> signIn(@RequestBody @Validated SignInDto request){
-        userService.signIn(request);
+    public BaseResponse<Void> signIn(@RequestBody @Validated LoginRequest requestDto,
+                                     HttpServletRequest servletRequest, HttpServletResponse servletResponse){
+        userService.login(requestDto,servletRequest, servletResponse);
         return BaseResponse.success();
     }
 
