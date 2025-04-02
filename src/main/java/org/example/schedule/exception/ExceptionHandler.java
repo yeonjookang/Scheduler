@@ -2,7 +2,7 @@ package org.example.schedule.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.example.schedule.controller.response.BaseResponse;
+import org.example.schedule.dto.response.BaseResponse;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,7 +14,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.stream.Collectors;
 
-import static org.example.schedule.controller.response.ResponseData.*;
+import static org.example.schedule.dto.response.ResponseData.*;
 
 @Slf4j
 @RestControllerAdvice

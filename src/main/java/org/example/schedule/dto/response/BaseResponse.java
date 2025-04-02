@@ -1,4 +1,4 @@
-package org.example.schedule.controller.response;
+package org.example.schedule.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-import static org.example.schedule.controller.response.ResponseData.SUCCESS;
+import static org.example.schedule.dto.response.ResponseData.SUCCESS;
 
 @Getter
 @JsonPropertyOrder({"code","status","message","result","timestamp"})
