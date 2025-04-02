@@ -1,23 +1,3 @@
--- User, Schedule 테이블 생성
-CREATE TABLE IF NOT EXISTS User (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    create_at DATETIME NOT NULL,
-    modify_at DATETIME NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS Schedule (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    create_at DATETIME NOT NULL,
-    modify_at DATETIME NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES User(id)
-    );
-
 -- User 테이블이 비어있을 때만 INSERT
 INSERT INTO User (email, password, create_at, modify_at)
 SELECT * FROM (
