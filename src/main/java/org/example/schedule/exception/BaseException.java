@@ -12,8 +12,4 @@ public class BaseException extends RuntimeException{
         this.exceptionData = exceptionData;
     }
 
-    public BaseException(String exceptionMessage, ResponseData exceptionData) {
-        super(exceptionMessage);
-        this.exceptionData = exceptionData;
-    }
 }

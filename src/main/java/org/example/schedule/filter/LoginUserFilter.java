@@ -56,7 +56,7 @@ public class LoginUserFilter implements Filter {
                             {
                               "code": 2008,
                               "status": 400,
-                              "message": "일정 수정 및 삭제에 대한 권한이 없습니다.",
+                              "message": "로그인이 필요한 서비스입니다.",
                               "timestamp": "%s"
                             }
                             """.formatted(LocalDateTime.now());

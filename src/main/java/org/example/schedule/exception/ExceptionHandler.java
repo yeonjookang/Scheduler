@@ -20,21 +20,14 @@ import static org.example.schedule.dto.response.ResponseData.*;
 @RestControllerAdvice
 public class ExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @org.springframework.web.bind.annotation.ExceptionHandler(UserException.class)
-    public BaseResponse<ResponseStatus> handle_UserException(UserException exception) {
-        log.error("[UserExceptionControllerAdvice: handle_UserException 호출]", exception);
+    @org.springframework.web.bind.annotation.ExceptionHandler(BaseException.class)
+    public BaseResponse<ResponseStatus> handle_BaseException(BaseException exception) {
+        log.error("[BaseExceptionControllerAdvice: handle_BaseException 호출]", exception);
         return BaseResponse.failOf(exception.getExceptionData(), exception.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @org.springframework.web.bind.annotation.ExceptionHandler(ScheduleException.class)
-    public BaseResponse<ResponseStatus> handle_ScheduleException(ScheduleException exception) {
-        log.error("[UserExceptionControllerAdvice: handle_ScheduleException 호출]", exception);
-        return BaseResponse.failOf(exception.getExceptionData(), exception.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @org.springframework.web.bind.annotation.ExceptionHandler({BaseException.class, NoHandlerFoundException.class, TypeMismatchException.class})
+    @org.springframework.web.bind.annotation.ExceptionHandler({NoHandlerFoundException.class, TypeMismatchException.class})
     public BaseResponse<ResponseStatus> handle_BadRequest(Exception exception) {
         log.error("[BaseExceptionControllerAdvice: handle_BadRequest 호출]", exception);
         return BaseResponse.failOf(URL_NOT_FOUND);
