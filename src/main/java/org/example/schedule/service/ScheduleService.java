@@ -1,6 +1,7 @@
 package org.example.schedule.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.schedule.dto.Comments;
 import org.example.schedule.dto.request.schedule.CreateScheduleRequest;
 import org.example.schedule.dto.request.schedule.UpdateScheduleRequest;
 import org.example.schedule.dto.response.schedule.CreateScheduleResponse;
@@ -11,6 +12,7 @@ import org.example.schedule.entity.Schedule;
 import org.example.schedule.entity.User;
 import org.example.schedule.exception.ScheduleException;
 import org.example.schedule.exception.UserException;
+import org.example.schedule.repository.CommentRepository;
 import org.example.schedule.repository.ScheduleRepository;
 import org.example.schedule.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import static org.example.schedule.dto.response.ResponseData.*;
 
 @Service
@@ -28,6 +32,7 @@ import static org.example.schedule.dto.response.ResponseData.*;
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     public CreateScheduleResponse saveSchedule(CreateScheduleRequest request, Long userId) {
         User findUser = userRepository.findById(userId).orElseThrow(() -> new UserException(USER_NOT_FOUND));
@@ -52,8 +57,11 @@ public class ScheduleService {
     }
 
     public GetScheduleResponse getScheduleDetail(Long scheduleId) {
-        return scheduleRepository.findDetailById(scheduleId)
+        GetScheduleResponse response = scheduleRepository.findDetailById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(SCHEDULE_NOT_FOUND));
+        List<Comments> comments = commentRepository.findCommentsByScheduleId(scheduleId);
+        response.setComments(comments);
+        return response;
     }
 
     public void updateSchedule(Long scheduleId, UpdateScheduleRequest request, Long userId) {

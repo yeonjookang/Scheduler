@@ -33,6 +33,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
         u.email,
         s.title,
         s.content,
+        null,
         s.createAt,
         s.modifyAt
     )
