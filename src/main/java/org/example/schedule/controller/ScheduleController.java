@@ -24,8 +24,9 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public BaseResponse<CreateScheduleResponse> saveSchedule(@RequestBody @Validated CreateScheduleRequest request){
-        CreateScheduleResponse response = scheduleService.saveSchedule(request);
+    public BaseResponse<CreateScheduleResponse> saveSchedule(@RequestBody @Validated CreateScheduleRequest request,
+                                                             @SessionAttribute(name = "LOGIN_USER") Long userId){
+        CreateScheduleResponse response = scheduleService.saveSchedule(request, userId);
         return BaseResponse.successOf(response);
     }
 
@@ -47,14 +48,16 @@ public class ScheduleController {
     }
 
     @PutMapping("/{scheduleId}")
-    public BaseResponse<Void> updateSchedule(@PathVariable Long scheduleId, @RequestBody @Validated UpdateScheduleRequest request) {
-        scheduleService.updateSchedule(scheduleId, request);
+    public BaseResponse<Void> updateSchedule(@PathVariable Long scheduleId, @RequestBody @Validated UpdateScheduleRequest request,
+                                             @SessionAttribute(name = "LOGIN_USER") Long userId) {
+        scheduleService.updateSchedule(scheduleId, request, userId);
         return BaseResponse.success();
     }
 
     @DeleteMapping("/{scheduleId}")
-    public BaseResponse<Void> deleteSchedule(@PathVariable Long scheduleId) {
-        scheduleService.deleteSchedule(scheduleId);
+    public BaseResponse<Void> deleteSchedule(@PathVariable Long scheduleId,
+                                             @SessionAttribute(name = "LOGIN_USER") Long userId) {
+        scheduleService.deleteSchedule(scheduleId, userId);
         return BaseResponse.success();
     }
 }

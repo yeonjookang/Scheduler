@@ -8,8 +8,11 @@ import org.example.schedule.dto.response.schedule.GetScheduleResponse;
 import org.example.schedule.dto.response.schedule.GetSchedulesResponse;
 import org.example.schedule.dto.ScheduleSummary;
 import org.example.schedule.entity.Schedule;
+import org.example.schedule.entity.User;
 import org.example.schedule.exception.ScheduleException;
+import org.example.schedule.exception.UserException;
 import org.example.schedule.repository.ScheduleRepository;
+import org.example.schedule.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +27,13 @@ import static org.example.schedule.dto.response.ResponseData.*;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
-    public CreateScheduleResponse saveSchedule(CreateScheduleRequest request) {
-        //TODO: 세션으로 User 정보 받아와야함
+    public CreateScheduleResponse saveSchedule(CreateScheduleRequest request, Long userId) {
+        User findUser = userRepository.findById(userId).orElseThrow(() -> new UserException(USER_NOT_FOUND));
+
         Schedule newSchedule = Schedule.builder()
-                .user()
+                .user(findUser)
                 .title(request.title())
                 .content(request.content())
                 .build();
@@ -51,17 +56,25 @@ public class ScheduleService {
                 .orElseThrow(() -> new ScheduleException(SCHEDULE_NOT_FOUND));
     }
 
-    public void updateSchedule(Long scheduleId, UpdateScheduleRequest request) {
-        //TODO: 세션으로 User 정보 확인해야함
+    public void updateSchedule(Long scheduleId, UpdateScheduleRequest request, Long userId) {
+        User findUser = userRepository.findById(userId).orElseThrow(() -> new UserException(USER_NOT_FOUND));
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(SCHEDULE_NOT_FOUND));
+
+        if (!findUser.equals(findSchedule.getUser())) {
+            throw new UserException(USER_NOT_ALLOWED);
+        }
+
         findSchedule.update(request.title(), request.content());
     }
 
-    public void deleteSchedule(Long scheduleId) {
-        //TODO: 세션으로 User 정보 확인해야함
+    public void deleteSchedule(Long scheduleId, Long userId) {
+        User findUser = userRepository.findById(userId).orElseThrow(() -> new UserException(USER_NOT_FOUND));
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new ScheduleException(SCHEDULE_NOT_FOUND));
+        if (!findUser.equals(findSchedule.getUser())) {
+            throw new UserException(USER_NOT_ALLOWED);
+        }
         scheduleRepository.delete(findSchedule);
     }
 }
