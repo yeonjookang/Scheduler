@@ -6,10 +6,10 @@ import org.example.schedule.dto.response.ResponseData;
 
 @Slf4j
 @Getter
-public class ScheduleException extends BaseException{
+public class CommentException extends BaseException{
 
-    public ScheduleException(ResponseData exceptionData) {
+    public CommentException(ResponseData exceptionData) {
         super(exceptionData);
-        log.info("ScheduleException 호출");
+        log.info("CommentException 호출");
     }
 }
