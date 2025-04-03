@@ -47,7 +47,7 @@
 내일배움캠프 Spring 6기 스프링 숙련반 과제입니다.
 
 ## 피드백을 바탕으로 한 수정사항
-- [ ] BaseException 를 사용하신 점은 좋았습니다만, ScheduleException 와 UserException 가 상속받아 ExceptionHandler 에서 같이 사용하면 어땟을까란 생각이 드네요.
+- [x] BaseException 를 사용하신 점은 좋았습니다만, ScheduleException 와 UserException 가 상속받아 ExceptionHandler 에서 같이 사용하면 어땟을까란 생각이 드네요.
 - [x] GetSchedulesDto 외에는 builder 를 사용하지 않는데 build 어노테이션을 필요 없을 것 같습니다.
 - [ ] 개발을 진행하다보면 Dto 가 너무 많아지는 경우가 존재합니다.
 
